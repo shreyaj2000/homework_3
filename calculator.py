@@ -69,24 +69,27 @@ def tokenize(line):
 def evaluate(tokens,answer):
   
   index = 1
+  bracket = 0
 
   while index < len(tokens):
+
     if tokens[index]['type'] == 'NUMBER':
       if tokens[index - 1]['type'] == 'MUL':
-        temp = (tokens[index-2]['number']*tokens[index]['number'])
-        del tokens[index-2:index+1]
-        tokens.insert(index-2, {'type': 'NUMBER', 'number': temp})
-        tokens, answer = evaluate(tokens,answer)
+        temp = tokens[index-2]['number'] * tokens[index]['number']
+        tokens[index-2]['number'] = temp
+        del tokens[index-1:index+1]
+        index -= 1
       elif tokens[index - 1]['type'] == 'DIV':
-        temp = (tokens[index-2]['number']/tokens[index]['number'])
-        del tokens[index-2:index+1]
-        tokens.insert(index-2, {'type': 'NUMBER', 'number': temp})
-        tokens, answer = evaluate(tokens,answer)
+        temp = tokens[index-2]['number'] / tokens[index]['number']*1.0
+        tokens[index-2]['number'] = temp
+        del tokens[index-1:index+1]
+        index -= 1
     index += 1
 
   index = 1
 
   while index < len(tokens):
+
     if tokens[index]['type'] == 'NUMBER':
       if tokens[index - 1]['type'] == 'PLUS':
         answer += tokens[index]['number']
@@ -94,6 +97,7 @@ def evaluate(tokens,answer):
       elif tokens[index - 1]['type'] == 'MINUS':
         answer -= tokens[index]['number']
         del tokens[index-1:index]
+
     index += 1
 
   return tokens, answer
