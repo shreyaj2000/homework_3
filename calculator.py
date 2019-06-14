@@ -66,10 +66,11 @@ def tokenize(line):
   return tokens
 
 
-def evaluate(tokens,answer):
-  
+def evaluate(tokens):
+
+  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+  answer = 0
   index = 1
-  bracket = 0
 
   while index < len(tokens):
 
@@ -100,12 +101,11 @@ def evaluate(tokens,answer):
 
     index += 1
 
-  return tokens, answer
+  return answer
 
 def test(line):
   tokens = tokenize(line)
-  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-  tokens, actualAnswer = evaluate(tokens,0)
+  actualAnswer = evaluate(tokens)
   expectedAnswer = eval(line)
   if abs(actualAnswer - expectedAnswer) < 1e-8:
     print("PASS! (%s = %f)" % (line, expectedAnswer))
@@ -129,6 +129,5 @@ while True:
   print('> ', end="")
   line = input()
   tokens = tokenize(line)
-  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-  tokens, answer = evaluate(tokens,0)
+  answer = evaluate(tokens)
   print("answer = %f\n" % answer)
